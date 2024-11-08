@@ -1,27 +1,43 @@
 document.getElementById("create-space-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Elements for status messages
     const resultMessage = document.getElementById("resultMessage");
+
+    // Get the space name and type values from the input
     const spaceName = document.getElementById("spaceName").value;
     const spaceType = document.getElementById("spaceType").value;
 
-    resultMessage.textContent = "Creating space, please wait...";
-    resultMessage.style.color = "blue";
+    // Hugging Face API endpoint and authorization token
+    const API_URL = "https://huggingface.co/api/repos/create";
+    const API_KEY = "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";
+
+    // Prepare the request payload
+    const payload = {
+        name: spaceName,
+        type: spaceType,
+        private: false,
+        sdk: "docker"
+    };
 
     try {
-        const response = await fetch('https://blueserver-emjo.onrender.com/api/createSpace', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ spaceName, spaceType })
+        // Send POST request to create the new space
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            resultMessage.textContent = result.message;
+            resultMessage.textContent = `Space "${spaceName}" created successfully!`;
             resultMessage.style.color = "green";
         } else {
-            resultMessage.textContent = `Failed: ${result.error}`;
+            resultMessage.textContent = `Failed to create space: ${result.error}`;
             resultMessage.style.color = "red";
         }
     } catch (error) {
