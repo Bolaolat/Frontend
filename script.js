@@ -4,7 +4,7 @@ document.getElementById("create-space-form").addEventListener("submit", async (e
     // Elements for status messages
     const resultMessage = document.getElementById("resultMessage");
 
-    // Space name and type values
+    // Get the space name and type values from the input
     const spaceName = document.getElementById("spaceName").value;
     const spaceType = document.getElementById("spaceType").value;
 
