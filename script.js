@@ -3,22 +3,35 @@ document.getElementById("create-space-form").addEventListener("submit", async (e
 
     // Elements for status messages
     const resultMessage = document.getElementById("resultMessage");
+    const loadingIndicator = document.getElementById("loadingIndicator");
 
     // Get the space name and type values from the input
-    const spaceName = document.getElementById("spaceName").value;
-    const spaceType = document.getElementById("spaceType").value;
+    const spaceName = document.getElementById("spaceName").value.trim();
+    const spaceType = document.getElementById("spaceType").value.trim();
+    const isPrivate = document.getElementById("isPrivate").checked;
 
-    // Hugging Face API endpoint and authorization token
+    // Validate inputs
+    if (!spaceName || !spaceType) {
+        resultMessage.textContent = "Please provide both a name and a type for the space.";
+        resultMessage.style.color = "red";
+        return;
+    }
+
+    // Hugging Face API endpoint (API key should be stored securely)
     const API_URL = "https://huggingface.co/api/repos/create";
-    const API_KEY = "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";
+    const API_KEY = "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";  // Should be stored in server-side code
 
     // Prepare the request payload
     const payload = {
         name: spaceName,
         type: spaceType,
-        private: false,
+        private: isPrivate,
         sdk: "docker"
     };
+
+    // Show loading indicator and clear any previous message
+    loadingIndicator.style.display = "block";
+    resultMessage.textContent = "";
 
     try {
         // Send POST request to create the new space
@@ -33,15 +46,21 @@ document.getElementById("create-space-form").addEventListener("submit", async (e
 
         const result = await response.json();
 
+        // Hide loading indicator
+        loadingIndicator.style.display = "none";
+
         if (response.ok) {
-            resultMessage.textContent = `Space "${spaceName}" created successfully!`;
+            resultMessage.innerHTML = `Space "<a href="https://huggingface.co/spaces/${spaceName}" target="_blank">${spaceName}</a>" created successfully!`;
             resultMessage.style.color = "green";
         } else {
-            resultMessage.textContent = `Failed to create space: ${result.error}`;
+            // Display error with detailed response message
+            resultMessage.textContent = `Failed to create space: ${result.error || "Unknown error"} (HTTP ${response.status})`;
             resultMessage.style.color = "red";
         }
     } catch (error) {
-        resultMessage.textContent = `Error: ${error.message}`;
+        // Hide loading indicator and display network error
+        loadingIndicator.style.display = "none";
+        resultMessage.textContent = `Error: ${error.message}. Check your internet connection.`;
         resultMessage.style.color = "red";
     }
 });
