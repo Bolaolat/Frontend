@@ -4,13 +4,13 @@ document.getElementById("create-space-form").addEventListener("submit", async (e
     // Elements for status messages
     const resultMessage = document.getElementById("resultMessage");
 
-    // Get the space name and type values from the input
+    // Space name and type values
     const spaceName = document.getElementById("spaceName").value;
     const spaceType = document.getElementById("spaceType").value;
 
     // Hugging Face API endpoint and authorization token
     const API_URL = "https://huggingface.co/api/repos/create";
-    const API_KEY = "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";
+    const API_KEY = "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";
 
     // Prepare the request payload
     const payload = {
