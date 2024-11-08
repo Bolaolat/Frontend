@@ -11,9 +11,14 @@
         <h1>Create a New Hugging Face Space</h1>
         <form id="create-space-form">
             <label for="spaceName">Space Name:</label>
-            <input type="text" id="spaceName" name="spaceName" required>
+            <input type="text" id="spaceName" name="spaceName" required placeholder="Enter the space name">
+            
             <label for="spaceType">Space Type:</label>
-            <input type="text" id="spaceType" name="spaceType" required>
+            <select id="spaceType" name="spaceType" required>
+                <option value="docker">Docker</option>
+                <option value="blank">Blank</option>
+            </select>
+            
             <button type="submit">Create Space</button>
         </form>
         <div id="resultMessage"></div>
