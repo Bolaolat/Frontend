@@ -9,7 +9,7 @@ document.getElementById("create-space-form").addEventListener("submit", async (e
     resultMessage.style.color = "blue";
 
     try {
-        const response = await fetch('https://backend-vi04.onrender.com/api/createSpace', {
+        const response = await fetch('https://blueserver-emjo.onrender.com/api/createSpace', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ spaceName, spaceType })
