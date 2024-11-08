@@ -10,7 +10,7 @@ document.getElementById("create-space-form").addEventListener("submit", async (e
 
     // Hugging Face API endpoint and authorization token
     const API_URL = "https://huggingface.co/api/repos/create";
-    const API_KEY = "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";
+    const API_KEY = "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";
 
     // Prepare the request payload
     const payload = {
