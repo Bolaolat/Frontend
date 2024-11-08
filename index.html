@@ -3,8 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Hugging Face Space</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Create and List Hugging Face Spaces</title>
+    <style>
+        /* Fullscreen background and overlay */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: url('https://raw.githubusercontent.com/Bolaolat/Giveaway-/main/_1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        .overlay {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            max-width: 500px;
+            width: 90%;
+            margin: auto;
+            margin-top: 10vh;
+        }
+
+        /* Form styling */
+        form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        form input[type="text"],
+        form select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        form button:hover {
+            background-color: #005bb5;
+        }
+
+        #resultMessage, #spacesList {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* Loader styling */
+        .loader {
+            width: 100px;
+            height: 40px;
+            --g: radial-gradient(farthest-side,#0000 calc(95% - 3px),#fff calc(100% - 3px) 98%,#0000 101%) no-repeat;
+            background: var(--g), var(--g), var(--g);
+            background-size: 30px 30px;
+            animation: l9 0.5s infinite alternate;
+            position: absolute; /* Center loader over overlay */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Loader animation */
+        @keyframes l9 {
+            0% { background-position: 0 50%, 50% 50%, 100% 50%; }
+            20% { background-position: 0 0, 50% 50%, 100% 50%; }
+            40% { background-position: 0 100%, 50% 0, 100% 50%; }
+            60% { background-position: 0 50%, 50% 100%, 100% 0; }
+            80% { background-position: 0 50%, 50% 50%, 100% 100%; }
+            100% { background-position: 0 50%, 50% 50%, 100% 50%; }
+        }
+
+        /* Responsive styling */
+        @media (max-width: 640px) {
+            .overlay {
+                padding: 1.5rem;
+                margin-top: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="overlay">
@@ -23,11 +116,117 @@
             </label>
 
             <button type="submit">Create Space</button>
+            <button type="button" onclick="listSpaces()">List All Spaces</button>
             <div id="loadingIndicator" class="loader" style="display: none;"></div>
             <p id="resultMessage"></p>
         </form>
+        <div id="spacesList"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.getElementById("create-space-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Elements for status messages
+            const resultMessage = document.getElementById("resultMessage");
+            const loadingIndicator = document.getElementById("loadingIndicator");
+
+            // Get the space name and type values from the input
+            const spaceName = document.getElementById("spaceName").value.trim();
+            const spaceType = document.getElementById("spaceType").value.trim();
+            const isPrivate = document.getElementById("isPrivate").checked;
+
+            // Validate inputs
+            if (!spaceName || !spaceType) {
+                resultMessage.textContent = "Please provide both a name and a type for the space.";
+                resultMessage.className = "error";
+                return;
+            }
+
+            // Hugging Face API endpoint (API key should be stored securely)
+            const API_URL = "https://huggingface.co/api/repos/create";
+            const API_KEY = "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";  // Should be stored in server-side code
+
+            // Prepare the request payload
+            const payload = {
+                name: spaceName,
+                type: spaceType,
+                private: isPrivate,
+                sdk: "docker"
+            };
+
+            // Show loading indicator and clear any previous message
+            loadingIndicator.style.display = "block";
+            resultMessage.textContent = "";
+
+            try {
+                // Send POST request to create the new space
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                // Hide loading indicator
+                loadingIndicator.style.display = "none";
+
+                if (response.ok) {
+                    resultMessage.innerHTML = `Space "<a href="https://huggingface.co/spaces/${spaceName}" target="_blank">${spaceName}</a>" created successfully!`;
+                    resultMessage.className = "success";
+                } else {
+                    // Display error with detailed response message
+                    resultMessage.textContent = `Failed to create space: ${result.error || "Unknown error"} (HTTP ${response.status})`;
+                    resultMessage.className = "error";
+                }
+            } catch (error) {
+                // Hide loading indicator and display network error
+                loadingIndicator.style.display = "none";
+                resultMessage.textContent = `Error: ${error.message}. Check your internet connection.`;
+                resultMessage.className = "error";
+            }
+        });
+
+        async function listSpaces() {
+            const spacesList = document.getElementById("spacesList");
+            spacesList.innerHTML = ""; // Clear previous list
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            loadingIndicator.style.display = "block";
+
+            // Hugging Face Spaces API (API key should be securely stored)
+            const API_URL = "https://huggingface.co/api/spaces";
+            const API_KEY = "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"; // Use environment variables in production
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${API_KEY}`
+                    }
+                });
+
+                const spaces = await response.json();
+                loadingIndicator.style.display = "none";
+
+                if (response.ok) {
+                    spacesList.innerHTML = `<h4>All Spaces:</h4>`;
+                    spaces.forEach(space => {
+                        const spaceItem = document.createElement("p");
+                        spaceItem.innerHTML = `<a href="https://huggingface.co/spaces/${space.id}" target="_blank">${space.id}</a> - ${space.description || "No description"}`;
+                        spacesList.appendChild(spaceItem);
+                    });
+                } else {
+                    spacesList.textContent = `Failed to load spaces: ${spaces.error}`;
+                }
+            } catch (error) {
+                loadingIndicator.style.display = "none";
+                spacesList.textContent = `Error: ${error.message}. Check your internet connection.`;
+            }
+        }
+    </script>
 </body>
 </html>
