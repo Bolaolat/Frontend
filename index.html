@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <div class="overlay">
         <h3>BLUE DEMON FREE DEPLOYMENT</h3>
         <form id="create-space-form">
             <label for="spaceName">Space Name:</label>
@@ -23,7 +23,7 @@
             </label>
 
             <button type="submit">Create Space</button>
-            <div id="loadingIndicator" style="display: none;">Creating space...</div>
+            <div id="loadingIndicator" class="loader" style="display: none;"></div>
             <p id="resultMessage"></p>
         </form>
     </div>
