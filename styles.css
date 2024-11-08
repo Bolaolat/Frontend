@@ -1,52 +1,92 @@
-* {
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+/* Fullscreen background and overlay */
+html, body {
     margin: 0;
+    padding: 0;
+    height: 100%;
+    background: url('https://raw.githubusercontent.com/Bolaolat/Giveaway-/main/_1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
 }
 
-.container {
-    text-align: center;
-    max-width: 400px;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+.overlay {
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3rem;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    max-width: 500px;
+    width: 90%;
+    margin: auto;
+    margin-top: 10vh;
 }
 
-label {
+/* Form styling */
+form label {
     display: block;
     margin-top: 10px;
     font-weight: bold;
+    color: #fff;
 }
 
-input, select {
+form input[type="text"],
+form select {
     width: 100%;
     padding: 8px;
-    margin: 8px 0;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-button {
-    background-color: #4CAF50;
+form button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background-color: #0073e6;
     color: white;
-    padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
 }
 
-button:hover {
-    background-color: #45a049;
+form button:hover {
+    background-color: #005bb5;
 }
 
-p#resultMessage {
+#resultMessage {
     margin-top: 10px;
-    color: #333;
+    font-size: 14px;
+}
+
+/* Loader styling */
+.loader {
+    width: 100px;
+    height: 40px;
+    --g: radial-gradient(farthest-side,#0000 calc(95% - 3px),#fff calc(100% - 3px) 98%,#0000 101%) no-repeat;
+    background: var(--g), var(--g), var(--g);
+    background-size: 30px 30px;
+    animation: l9 0.5s infinite alternate;
+    position: absolute; /* Center loader over overlay */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Loader animation */
+@keyframes l9 {
+    0% { background-position: 0 50%, 50% 50%, 100% 50%; }
+    20% { background-position: 0 0, 50% 50%, 100% 50%; }
+    40% { background-position: 0 100%, 50% 0, 100% 50%; }
+    60% { background-position: 0 50%, 50% 100%, 100% 0; }
+    80% { background-position: 0 50%, 50% 50%, 100% 100%; }
+    100% { background-position: 0 50%, 50% 50%, 100% 50%; }
+}
+
+/* Responsive styling */
+@media (max-width: 640px) {
+    .overlay {
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
 }
