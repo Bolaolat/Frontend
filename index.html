@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Create a Hugging Face Space</h1>
+        <h3>BLUE DEMON FREE DEPLOYMENT</h3>
         <form id="create-space-form">
             <label for="spaceName">Space Name:</label>
             <input type="text" id="spaceName" name="spaceName" placeholder="Enter space name" required>
@@ -18,7 +18,12 @@
                 <option value="space">Docker Space</option>
             </select>
 
+            <label for="isPrivate">
+                <input type="checkbox" id="isPrivate" name="isPrivate"> Private Space
+            </label>
+
             <button type="submit">Create Space</button>
+            <div id="loadingIndicator" style="display: none;">Creating space...</div>
             <p id="resultMessage"></p>
         </form>
     </div>
