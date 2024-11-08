@@ -8,21 +8,21 @@
 </head>
 <body>
     <div class="container">
-        <h1>Create a New Hugging Face Space</h1>
+        <h1>Create a Hugging Face Space</h1>
         <form id="create-space-form">
             <label for="spaceName">Space Name:</label>
-            <input type="text" id="spaceName" name="spaceName" required placeholder="Enter the space name">
-            
+            <input type="text" id="spaceName" name="spaceName" placeholder="Enter space name" required>
+
             <label for="spaceType">Space Type:</label>
-            <select id="spaceType" name="spaceType" required>
-                <option value="docker">Docker</option>
-                <option value="blank">Blank</option>
+            <select id="spaceType" name="spaceType">
+                <option value="space">Docker Space</option>
             </select>
-            
+
             <button type="submit">Create Space</button>
+            <p id="resultMessage"></p>
         </form>
-        <div id="resultMessage"></div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
